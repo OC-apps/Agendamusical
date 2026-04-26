@@ -116,6 +116,8 @@ textarea.input{min-height:80px;resize:vertical}
 .pkg-opt.active .pkg-name{color:#fff}
 .pkg-opt .pkg-price{font-family:'JetBrains Mono',monospace;font-size:13px;color:#555;transition:color 0.2s}
 .pkg-opt.active .pkg-price{color:var(--ac)}
+.pkg-opt .pkg-desc{display:block;font-size:11px;color:#555;margin-top:6px;line-height:1.5;transition:color 0.2s}
+.pkg-opt.active .pkg-desc{color:#aaa}
 
 /* SCHEDULE */
 .sched{display:none;background:rgba(var(--ac-rgb),0.04);border:1px solid rgba(var(--ac-rgb),0.1);border-radius:15px;padding:15px;margin-top:14px}
@@ -344,8 +346,18 @@ textarea.input{min-height:80px;resize:vertical}
 <script>
 // ===== LOAD CONFIG: URL param first, then localStorage =====
 var DEF_CFG={nombre:"",subtitulo:"Música en Vivo para Eventos",ciudad:"",whatsapp:"",telefono_lada:"",website:"",redes:{facebook:"",instagram:"",tiktok:""},color:"#9333EA",logo:""};
-var DEF_PKG=[{id:"1",nombre:"Cantante Solista",precio:2500,icono:"🎤"},{id:"2",nombre:"Solista + Baterista",precio:3500,icono:"🥁"}];
-var DEF_MPKG=[{id:"m1",nombre:"Misa estándar",precio:1500,icono:"🎵"}];
+var DEF_PKG=[
+  {id:"1",nombre:"Básico",precio:3300,icono:"🎸",desc:"Solista con guitarra acústica y voz. Una mezcla elegante para toda ocasión, no se limita solo a música tranquila."},
+  {id:"2",nombre:"Live Drums",precio:4400,icono:"🥁",desc:"Prende el ambiente con el ritmo de los tambores en vivo y el mejor repertorio para tu evento."},
+  {id:"3",nombre:"Dueto",precio:4300,icono:"🎤",desc:"Música de todos los géneros para hombres y mujeres. Canta y baila con nosotros."},
+  {id:"4",nombre:"Premium",precio:5500,icono:"⭐",desc:"La celebración de lujo con todo el equipo de Adán Ruiz Music y el repertorio más variado."}
+];
+var DEF_MPKG=[
+  {id:"m1",nombre:"Básico",precio:3300,icono:"🎸",desc:"Solista con guitarra. Acompañamiento sencillo pero de muy buena calidad, ideal para cualquier celebración eucarística."},
+  {id:"m2",nombre:"Dueto",precio:4500,icono:"🎵",desc:"Mezcla de voces o instrumentos: piano, guitarra o violín con arreglos agradables al oído."},
+  {id:"m3",nombre:"Delux",precio:5800,icono:"🎹",desc:"Ensamble de guitarra, piano y voz femenina o el agradable sonido del violín. Eleva tus sentidos."},
+  {id:"m4",nombre:"Harmony",precio:6900,icono:"✨",desc:"La armonía perfecta para una celebración eucarística. Ambiente de tranquilidad, elegancia y belleza."}
+];
 
 // Try loading from URL ?d= parameter (embedded config)
 var _urlData=null;
@@ -516,7 +528,7 @@ function renderPkgs(){
   PAQUETES.forEach(function(pkg){
     var d=document.createElement("div");
     d.className="pkg-opt"+(selectedPkg&&selectedPkg.id===pkg.id?" active":"");
-    d.innerHTML='<span class="pkg-name">'+(pkg.icono||"🎤")+' '+pkg.nombre+'</span><span class="pkg-price">$'+pkg.precio.toLocaleString("es-CO")+'/hr</span>';
+    d.innerHTML='<span class="pkg-name">'+(pkg.icono||"🎤")+' '+pkg.nombre+'</span><span class="pkg-price">$'+pkg.precio.toLocaleString("es-CO")+'/hr</span>'+(pkg.desc?'<span class="pkg-desc">'+pkg.desc+'</span>':'');
     d.onclick=function(){
       selectedPkg=pkg;renderPkgs();calcAll();
       document.getElementById("pkg-price-label").textContent="$"+pkg.precio.toLocaleString("es-CO");
@@ -530,7 +542,7 @@ function renderMPkgs(){
   PAQUETES_MISA.forEach(function(pkg){
     var d=document.createElement("div");
     d.className="pkg-opt"+(selectedMPkg&&selectedMPkg.id===pkg.id?" active":"");
-    d.innerHTML='<span class="pkg-name">'+(pkg.icono||TIPO2_ICONO)+' '+pkg.nombre+'</span><span class="pkg-price">$'+pkg.precio.toLocaleString("es-CO")+'</span>';
+    d.innerHTML='<span class="pkg-name">'+(pkg.icono||TIPO2_ICONO)+' '+pkg.nombre+'</span><span class="pkg-price">$'+pkg.precio.toLocaleString("es-CO")+'</span>'+(pkg.desc?'<span class="pkg-desc">'+pkg.desc+'</span>':'');
     d.onclick=function(){selectedMPkg=pkg;renderMPkgs();calcAll()};
     list.appendChild(d);
   });
