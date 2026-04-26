@@ -1465,7 +1465,7 @@ function App(props){
             h("input",{type:"number",style:Object.assign({},I,{width:88,textAlign:"center",fontFamily:JM,fontWeight:700}),value:pkg.precio,onChange:function(e){var np=mpkgs.slice();np[i]=Object.assign({},np[i],{precio:Number(e.target.value)||0});setMPkgs(np);saveMPkg(np)}}),
             mpkgs.length>1&&h("button",{onClick:function(){var np=mpkgs.filter(function(_,j){return j!==i});setMPkgs(np);saveMPkg(np)},style:{background:"none",border:"none",color:"#ff3333",fontSize:16,cursor:"pointer"}},"✕")
           )}),
-          h("button",{onClick:function(){var np=mpkgs.concat([{id:"m"+Date.now(),nombre:"Nuevo paquete",precio:0,icono:t2icono(cfg)});setMPkgs(np);saveMPkg(np)},style:{width:"100%",padding:"9px",borderRadius:10,fontSize:12,fontWeight:600,cursor:"pointer",background:acA(0.07),border:"1px solid "+acA(0.2),color:ac,fontFamily:"'Outfit',sans-serif"}},
+          h("button",{onClick:function(){var np=mpkgs.concat([{id:"m"+Date.now(),nombre:"Nuevo paquete",precio:0,icono:t2icono(cfg)}]);setMPkgs(np);saveMPkg(np)},style:{width:"100%",padding:"9px",borderRadius:10,fontSize:12,fontWeight:600,cursor:"pointer",background:acA(0.07),border:"1px solid "+acA(0.2),color:ac,fontFamily:"'Outfit',sans-serif"}},
             "+ Agregar paquete")
         ),
 
