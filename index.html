@@ -1527,7 +1527,7 @@ function App(props){
           h("div",null,h("label",{style:LB},"URL base de cotizar.html"),h("input",{type:"text",style:Object.assign({},I,{marginBottom:12}),placeholder:"https://oc-apps.github.io/Agendamusical/cotizar.html",value:cfg.cotizar_url||"",onChange:function(e){cfgUpd("cotizar_url",e.target.value)}})),
           cfg.cotizar_url&&h(React.Fragment,null,
             h("button",{onClick:function(){
-              var payload={cfg:{nombre:cfg.nombre,subtitulo:cfg.subtitulo,ciudad:cfg.ciudad,whatsapp:cfg.whatsapp,telefono_lada:cfg.telefono_lada,website:cfg.website,redes:cfg.redes,color:cfg.color,logo:cfg.logo,tipo2_nombre:cfg.tipo2_nombre,tipo2_icono:cfg.tipo2_icono,tipo2_en_cotizar:cfg.tipo2_en_cotizar},pkgs:pkgs,mpkgs:mpkgs};
+              var payload={cfg:{nombre:cfg.nombre,subtitulo:cfg.subtitulo,ciudad:cfg.ciudad,whatsapp:cfg.whatsapp,telefono_lada:cfg.telefono_lada||"",website:cfg.website||"",redes:{facebook:(cfg.redes&&cfg.redes.facebook)||"",instagram:(cfg.redes&&cfg.redes.instagram)||"",tiktok:(cfg.redes&&cfg.redes.tiktok)||""},color:cfg.color||"#9333EA",tipo2_nombre:cfg.tipo2_nombre||"Misas",tipo2_icono:cfg.tipo2_icono||"⛪",tipo2_en_cotizar:cfg.tipo2_en_cotizar!==false},pkgs:pkgs.map(function(p){return{id:p.id,nombre:p.nombre,precio:p.precio,icono:p.icono||"🎤"}}),mpkgs:mpkgs.map(function(p){return{id:p.id,nombre:p.nombre,precio:p.precio,icono:p.icono||"🎵"}})};
               var encoded=btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
               var longUrl=cfg.cotizar_url+(cfg.cotizar_url.indexOf("?")>=0?"&":"?")+"d="+encoded;
               ntf("⏳ Generando link corto...");
