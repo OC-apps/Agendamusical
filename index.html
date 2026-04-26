@@ -1523,27 +1523,39 @@ function App(props){
         // QR Cotización
         h("div",{className:"card-section"},
           h("h3",null,"📱 Link & QR de Cotización"),
-          h("p",{style:{color:"#666",fontSize:11,marginBottom:12}},"Genera un link especial con tus datos incluidos. Cualquier cliente que lo abra verá tu info correcta, sin importar el dispositivo."),
+          h("p",{style:{color:"#666",fontSize:11,marginBottom:12}},"Genera un link corto con tus datos incluidos. Cualquier cliente que lo abra verá tu info correcta en cualquier dispositivo."),
           h("div",null,h("label",{style:LB},"URL base de cotizar.html"),h("input",{type:"text",style:Object.assign({},I,{marginBottom:12}),placeholder:"https://oc-apps.github.io/Agendamusical/cotizar.html",value:cfg.cotizar_url||"",onChange:function(e){cfgUpd("cotizar_url",e.target.value)}})),
           cfg.cotizar_url&&h(React.Fragment,null,
             h("button",{onClick:function(){
               var payload={cfg:{nombre:cfg.nombre,subtitulo:cfg.subtitulo,ciudad:cfg.ciudad,whatsapp:cfg.whatsapp,telefono_lada:cfg.telefono_lada,website:cfg.website,redes:cfg.redes,color:cfg.color,logo:cfg.logo,tipo2_nombre:cfg.tipo2_nombre,tipo2_icono:cfg.tipo2_icono,tipo2_en_cotizar:cfg.tipo2_en_cotizar},pkgs:pkgs,mpkgs:mpkgs};
               var encoded=btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-              var url=cfg.cotizar_url+(cfg.cotizar_url.indexOf("?")>=0?"&":"?")+"d="+encoded;
-              navigator.clipboard.writeText(url).then(function(){ntf("✓ Link copiado al portapapeles")}).catch(function(){ntf("Link generado — cópialo manualmente","err")});
-              cfgUpd("cotizar_link",url);
+              var longUrl=cfg.cotizar_url+(cfg.cotizar_url.indexOf("?")>=0?"&":"?")+"d="+encoded;
+              ntf("⏳ Generando link corto...");
+              fetch("https://tinyurl.com/api-create.php?url="+encodeURIComponent(longUrl))
+                .then(function(r){return r.text()})
+                .then(function(short){
+                  cfgUpd("cotizar_link",short);
+                  navigator.clipboard.writeText(short).then(function(){ntf("✓ Link corto copiado: "+short)}).catch(function(){ntf("Link listo — cópialo manualmente")});
+                })
+                .catch(function(){
+                  // fallback: copy long url
+                  cfgUpd("cotizar_link",longUrl);
+                  navigator.clipboard.writeText(longUrl).catch(function(){});
+                  ntf("Sin conexión — se copió el link largo","err");
+                });
             },style:{width:"100%",padding:"11px",borderRadius:11,fontSize:13,fontWeight:700,cursor:"pointer",background:"linear-gradient(135deg,"+ac+",rgba(var(--ac-rgb),0.7))",border:"none",color:"#fff",fontFamily:"'Outfit',sans-serif",marginBottom:10,boxShadow:"0 4px 16px "+acA(0.4)}},
-              "🔗 Generar y copiar link con mis datos"),
+              "🔗 Generar link corto con mis datos"),
             cfg.cotizar_link&&h("div",{style:{marginBottom:12}},
-              h("label",{style:LB},"Tu link personalizado"),
+              h("label",{style:LB},"Tu link para compartir"),
               h("div",{style:{display:"flex",gap:6,alignItems:"center"}},
-                h("input",{readOnly:true,style:Object.assign({},I,{fontSize:10,color:"#888",flex:1}),value:cfg.cotizar_link||""}),
-                h("button",{onClick:function(){navigator.clipboard.writeText(cfg.cotizar_link);ntf("✓ Copiado")},style:{padding:"10px 12px",borderRadius:10,fontSize:12,cursor:"pointer",background:acA(0.1),border:"1px solid "+acA(0.2),color:ac,fontFamily:"'Outfit',sans-serif",flexShrink:0}},"📋")
+                h("input",{readOnly:true,style:Object.assign({},I,{fontSize:13,color:"#ccc",flex:1,fontWeight:600}),value:cfg.cotizar_link||""}),
+                h("button",{onClick:function(){navigator.clipboard.writeText(cfg.cotizar_link);ntf("✓ Copiado")},style:{padding:"10px 12px",borderRadius:10,fontSize:12,cursor:"pointer",background:acA(0.1),border:"1px solid "+acA(0.2),color:ac,fontFamily:"'Outfit',sans-serif",flexShrink:0}},"📋"),
+                h("button",{onClick:function(){window.open("https://wa.me/?text="+encodeURIComponent("¡Hola! Puedes cotizar mi servicio aquí: "+cfg.cotizar_link),"_blank")},style:{padding:"10px 12px",borderRadius:10,fontSize:12,cursor:"pointer",background:"rgba(37,211,102,0.08)",border:"1px solid rgba(37,211,102,0.25)",color:"#25d366",fontFamily:"'Outfit',sans-serif",flexShrink:0}},"📤")
               )
             ),
-            h("div",{style:{textAlign:"center"}},
-              h("img",{src:"https://api.qrserver.com/v1/create-qr-code/?data="+encodeURIComponent(cfg.cotizar_link||cfg.cotizar_url)+"&size=200x200&bgcolor=000000&color="+ac.slice(1),style:{width:160,height:160,borderRadius:10,border:"2px solid "+ac}}),
-              h("p",{style:{color:"#666",fontSize:10,marginTop:8}},"Comparte este QR — lleva tus datos incluidos")
+            cfg.cotizar_link&&h("div",{style:{textAlign:"center"}},
+              h("img",{src:"https://api.qrserver.com/v1/create-qr-code/?data="+encodeURIComponent(cfg.cotizar_link)+"&size=200x200&bgcolor=000000&color="+ac.slice(1),style:{width:160,height:160,borderRadius:10,border:"2px solid "+ac}}),
+              h("p",{style:{color:"#666",fontSize:10,marginTop:8}},"Escanea o comparte — lleva tus datos incluidos")
             )
           )
         ),
